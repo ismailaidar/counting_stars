@@ -66,14 +66,19 @@ class Block {
         const self = this;
         return new Promise((resolve, reject) => {
             if (self.height > 0) {
+                // Resolve with the data if the object isn't the Genesis block
                 resolve(hex2ascii(JSON.parse(this.body))) 
             } else {
                 reject('Data cannot be retrieved either because this is an invalid block or this is a genesis block.')
             }
         })
+    }
 
-        // Resolve with the data if the object isn't the Genesis block
-
+    generateHash() {
+        this.hash = SHA256(JSON.stringify(this));
+        // re-Hash: because the hash value was initially empty when we hashed the first time.
+        this.hash = SHA256(JSON.stringify(this));
+        return this.hash;
     }
 
 }
