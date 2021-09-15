@@ -72,7 +72,7 @@ class Blockchain {
             }
             
             block.height = self.height++;
-            block.time = Date.now();
+            block.time = Date.now().getTime().toString().slice(0,-3);
 
             block.generateHash();
 
@@ -80,7 +80,7 @@ class Blockchain {
 
             self.height++;
 
-            resolve(block)
+            resolve(block);
         });
     }
 
@@ -94,7 +94,7 @@ class Blockchain {
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
-
+            resolve(`address:${new Date().getTime().toString().slice(0,-3)}:starRegistry`)
         });
     }
 
