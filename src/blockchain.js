@@ -181,7 +181,7 @@ class Blockchain {
         let self = this;
         let stars = [];
         return new Promise(async(resolve, reject) => {
-            self.chain.filter(async block => {
+            self.chain.forEach(async block => {
                 let data = await block.getBData();
                 if(data) {
                     if(data.owner === address) {
@@ -203,7 +203,20 @@ class Blockchain {
         let self = this;
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
-            
+            self.chain.forEach(async (block) => {
+                if(block.height === 0) {
+                    errorLog.push("Genesis block can't be validated")
+                }
+                if(!(await  block.validate())){
+                    errorLog.push("block can't be validated")
+                }
+                else if( block.previousBlockHash === self.chain[block.height - 1].hash){
+                    if(!(await  block.validate())){
+                        errorLog.push("block was not be validated")
+                    }
+               } 
+            })
+            resolve(errorLog);
         });
     }
 
