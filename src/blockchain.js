@@ -72,7 +72,7 @@ class Blockchain {
             }
 
             block.height = self.height++;
-            block.time = Date.now().getTime().toString().slice(0, -3);
+            block.time = Date.now().toString().slice(0, -3);
 
             block.generateHash();
 
@@ -147,7 +147,7 @@ class Blockchain {
             const block = self.chain
                                 .filter(b => b.hash === hash)[0];
             if(block === null || block === undefined) {
-                reject("There is no block with this hash!")
+                resolve(null)
             } else {
                 resolve(block);
             }
@@ -177,11 +177,19 @@ class Blockchain {
      * Remember the star should be returned decoded.
      * @param {*} address 
      */
-    getStarsByWalletAddress(address) {
+     getStarsByWalletAddress(address) {
         let self = this;
         let stars = [];
-        return new Promise((resolve, reject) => {
-
+        return new Promise(async(resolve, reject) => {
+            self.chain.filter(async block => {
+                let data = await block.getBData();
+                if(data) {
+                    if(data.owner === address) {
+                        stars.push(data);
+                    }
+                }
+            })
+            resolve(stars)
         });
     }
 
@@ -195,7 +203,7 @@ class Blockchain {
         let self = this;
         let errorLog = [];
         return new Promise(async (resolve, reject) => {
-
+            
         });
     }
 

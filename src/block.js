@@ -66,8 +66,14 @@ class Block {
         const self = this;
         return new Promise((resolve, reject) => {
             if (self.height > 0) {
+                const encodedData = self.body;
+                const dataObject = JSON.parse(hex2ascii(encodedData));
                 // Resolve with the data if the object isn't the Genesis block
-                resolve(hex2ascii(JSON.parse(this.body))) 
+                if(dataObject) {
+                    resolve(dataObject);
+                } else {
+                    resolve(false);
+                }
             } else {
                 reject('Data cannot be retrieved either because this is an invalid block or this is a genesis block.')
             }
