@@ -71,7 +71,8 @@ class Blockchain {
                 block.previousBlockHash = null;
             }
 
-            block.height = self.height++;
+            block.height = self.height+1;
+            console.warn(block.height)
             block.time = Date.now().toString().slice(0, -3);
 
             block.generateHash();
