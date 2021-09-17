@@ -70,9 +70,9 @@ class Blockchain {
             } else {
                 block.previousBlockHash = null;
             }
-            
+
             block.height = self.height++;
-            block.time = Date.now().getTime().toString().slice(0,-3);
+            block.time = Date.now().getTime().toString().slice(0, -3);
 
             block.generateHash();
 
@@ -94,7 +94,7 @@ class Blockchain {
      */
     requestMessageOwnershipVerification(address) {
         return new Promise((resolve) => {
-            resolve(`address:${new Date().getTime().toString().slice(0,-3)}:starRegistry`)
+            resolve(`address:${new Date().getTime().toString().slice(0, -3)}:starRegistry`)
         });
     }
 
@@ -118,7 +118,20 @@ class Blockchain {
     submitStar(address, message, signature, star) {
         let self = this;
         return new Promise(async (resolve, reject) => {
-
+            const time = parseInt(message.split(':')[1]);
+            let currentTime = parseInt(new Date().getTime().toString().slice(0, -3));
+            let timeDifference = currentTime - messageTime;
+            if (timeDifference <= 300) {
+                if (bitcoinMessage.verify(message, address, signature)) {
+                    let block = new BlockClass.Block({ "star": star, "owner": address });
+                    await this._addBlock(block);
+                    resolve(block);
+                } else {
+                    reject();
+                }
+            } else {
+                reject(new Error("it's been more than 5 mins"));
+            }
         });
     }
 
