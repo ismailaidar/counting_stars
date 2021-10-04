@@ -46,12 +46,12 @@ class Block {
             // Recalculate the hash of the Block
             let RecalculatedHash = SHA256(JSON.stringify(self)).toString();
             // Comparing if the hashes changed
-            if(auxiliaryHash != checkHash){
+            if(auxiliaryHash != RecalculatedHash){
                 // Returning the Block is not valid
-                    reject(false);
+                    resolve(false);
                 }else{
                 // Returning the Block is valid
-                    resolve(self);
+                    resolve(true);
                 }
         });
     }
